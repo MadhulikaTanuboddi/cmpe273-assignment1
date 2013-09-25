@@ -6,15 +6,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.concurrent.ConcurrentHashMap;
 
 import edu.sjsu.cmpe.library.domain.Book;
+import edu.sjsu.cmpe.library.domain.Reviews;
 
-public class BookRepository implements BookRepositoryInterface {
+public class BookRepository implements BookRepositoryInterface 
+{
     /** In-memory map to store books. (Key, Value) -> (ISBN, Book) */
     private final ConcurrentHashMap<Long, Book> bookInMemoryMap;
 
     /** Never access this key directly; instead use generateISBNKey() */
     private long isbnKey;
 
-    public BookRepository(ConcurrentHashMap<Long, Book> bookMap) {
+    public BookRepository(ConcurrentHashMap<Long, Book> bookMap) 
+    {
 	checkNotNull(bookMap, "bookMap must not be null for BookRepository");
 	bookInMemoryMap = bookMap;
 	isbnKey = 0;
@@ -41,6 +44,12 @@ public class BookRepository implements BookRepositoryInterface {
 	Long isbn = generateISBNKey();
 	newBook.setIsbn(isbn);
 	// TODO: create and associate other fields such as author
+	int asize= newBook.getAuthors().size();
+	if (asize>0) 
+	{
+		for(int id = 0; id<asize; id++)
+			newBook.getAuthors().get(id).seid(id+1);
+	}
 
 	// Finally, save the new book into the map
 	bookInMemoryMap.putIfAbsent(isbn, newBook);
@@ -58,4 +67,27 @@ public class BookRepository implements BookRepositoryInterface {
 	return bookInMemoryMap.get(isbn);
     }
 
+    //Remove Book
+    @Override
+    public boolean removeBook(Long isbn)
+    {
+    	   if (bookInMemoryMap.containsKey(isbn)) {
+    		   bookInMemoryMap.remove(isbn);
+    	       return true;
+    	   } 
+    	   else 
+    		   return false;
+    }
+    
+    //update book
+    @Override
+    public void ModifyBookStatus(Long isbn, String newstatus)
+    {
+    	 if (bookInMemoryMap.containsKey(isbn))
+    	 {
+    		 bookInMemoryMap.get(isbn).setStatus(newstatus);
+    	 }
+    	//bookInMemoryMap.get(isbn).setStatus(newstatus);
+    }
+    
 }

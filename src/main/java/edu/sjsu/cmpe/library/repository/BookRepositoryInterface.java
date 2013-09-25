@@ -9,7 +9,8 @@ import edu.sjsu.cmpe.library.domain.Book;
  * 
  * @see http://martinfowler.com/eaaCatalog/repository.html
  */
-public interface BookRepositoryInterface {
+public interface BookRepositoryInterface 
+{
     /**
      * Save a new book in the repository
      * 
@@ -29,4 +30,8 @@ public interface BookRepositoryInterface {
     Book getBookByISBN(Long isbn);
 
     // TODO: add other operations here!
+    //Book getReviewsByID(Long id);
+    
+    boolean removeBook(Long isbn);
+    void ModifyBookStatus(Long isbn, String newstatus);
 }
